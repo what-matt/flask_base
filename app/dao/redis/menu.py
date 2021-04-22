@@ -14,10 +14,6 @@ class MenuDaoRedis(MenuDaoBase, RedisDaoBase):
     """
     def insert(self, menu: Menu, **kwargs):
         """Insert a Menu into Redis."""
-        print("display1")
-        print(menu)
-        print("display2")
-        print(menu.id)
         hash_key = self.key_schema.menu_hash_key(menu.id)
         menu_ids_key = self.key_schema.menu_ids_key()
         client = kwargs.get('pipeline', self.redis)
@@ -36,7 +32,7 @@ class MenuDaoRedis(MenuDaoBase, RedisDaoBase):
         if not menu_hash:
             raise MenuNotFound()
 
-        return menu_hash
+        return FlatMenuSchema().load(menu_hash)
 
     def find_all(self, **kwargs) -> Set[Menu]:
         """Find all Menus in Redis."""

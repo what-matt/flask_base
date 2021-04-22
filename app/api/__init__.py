@@ -6,6 +6,7 @@ from flask_restful import Api
 from redis import exceptions
 
 from app.api.menu import MenuResource
+from app.api.menu import MenuListResource
 from app.core.connections import get_redis_timeseries_connection
 from app.dao.redis import MenuDaoRedis
 from app.dao.redis.key_schema import KeySchema
@@ -27,7 +28,12 @@ def configure(app):
         raise
     app.do_teardown_appcontext()
 
-    api.add_resource(MenuResource,
+    api.add_resource(MenuListResource,
                      '/menu',
+                     resource_class_args=(MenuDaoRedis(
+                         redis_client, key_schema), ))
+
+    api.add_resource(MenuResource,
+                     '/menu/<int:menu_id>',
                      resource_class_args=(MenuDaoRedis(
                          redis_client, key_schema), ))
