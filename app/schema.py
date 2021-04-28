@@ -1,4 +1,5 @@
 import marshmallow
+from marshmallow import fields
 import marshmallow_dataclass
 
 from app.models import Menu
@@ -12,8 +13,3 @@ FlatMenuSchema = marshmallow_dataclass.class_schema(Menu)
 # This Menu schema is used to serialize a Menu to and from a nested JSON object
 # used by the frontend to display menu data.
 MenuSchema = marshmallow_dataclass.class_schema(Menu)
-
-# This Menu schema is used to serialize a Menu to and from a nested JSON object
-# used by the frontend to display menu data.
-MenuSchema = marshmallow_dataclass.class_schema(Menu)
-
