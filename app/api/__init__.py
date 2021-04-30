@@ -8,8 +8,11 @@ from redis import exceptions
 from app.api.menu import MenuResource
 from app.api.menu import MenuListResource
 from app.core.connections import get_redis_timeseries_connection
-from app.dao.redis import MenuDaoRedis
+# from app.dao.redis import MenuDaoRedis
+from app.dao.sqlite import MenuDaoRedis
 from app.dao.redis.key_schema import KeySchema
+from app.models import db
+
 
 blueprint = Blueprint("api", __name__)
 api = Api(blueprint)
@@ -28,12 +31,24 @@ def configure(app):
         raise
     app.do_teardown_appcontext()
 
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test2.db'
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
+
+
+    # api.add_resource(MenuListResource,
+    #                  '/menu',
+    #                  resource_class_args=(MenuDaoRedis(
+    #                      redis_client, key_schema), ))
+    
     api.add_resource(MenuListResource,
                      '/menu',
                      resource_class_args=(MenuDaoRedis(
-                         redis_client, key_schema), ))
+                         db, key_schema), ))
 
-    api.add_resource(MenuResource,
-                     '/menu/<int:menu_id>',
-                     resource_class_args=(MenuDaoRedis(
-                         redis_client, key_schema), ))
+    # api.add_resource(MenuResource,
+    #                  '/menu/<int:menu_id>',
+    #                  resource_class_args=(MenuDaoRedis(
+    #                      redis_client, key_schema), ))
