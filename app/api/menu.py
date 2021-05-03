@@ -25,9 +25,9 @@ class MenuResource(DaoResource):
 
 
 @parser.error_handler
-def handle_request_parsing_error(err, req, schema, *, error_status_code, error_headers):
+def handle_request_parsing_error(err, req, schema, *, error_status_code, error_headers):  # type:ignore
     """webargs error handler that uses Flask-RESTful's abort function to return
     a JSON error response to the client.
     """
-    abort(error_status_code if error_status_code else 400 , errors=err.messages)
+    abort(error_status_code if error_status_code else 400, errors=err.messages)
 

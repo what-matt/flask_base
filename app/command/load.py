@@ -6,9 +6,7 @@ from progress.bar import Bar
 from flask import current_app
 
 from app.core import get_redis_timeseries_connection
-# from app.core import SampleDataGenerator  # pylint: disable=unused-import
 from app.dao.redis import MenuDaoRedis
-# from app.dao.redis import MenuGeoDaoRedis
 from app.schema import FlatMenuSchema
 from app.dao.redis.key_schema import KeySchema
 
@@ -36,7 +34,6 @@ def load(filename, delete_keys):
     key_schema = KeySchema(key_prefix)
     client = get_redis_timeseries_connection(hostname=hostname, port=port)
     menu_dao = MenuDaoRedis(client, key_schema)
-    # menu_geo_dao = MenuGeoDaoRedis(client, key_schema)
 
     if delete_keys:
         for key in client.scan_iter(f"{key_prefix}:*"):
@@ -53,13 +50,6 @@ def load(filename, delete_keys):
         menu_dao.insert(menu, pipeline=p)
         # menu_geo_dao.insert(menu, pipeline=p)
     p.execute()
-
-    print()
-    # sample_generator = SampleDataGenerator(client, menus, 1, key_schema)
-    # readings_bar = Bar('Generating metrics data', max=sample_generator.size)
-    # p = client.pipeline(transaction=False)
-    # for _ in sample_generator.generate(p):
-    #     readings_bar.next()
 
     print("\nFinishing up...")
     p.execute()
