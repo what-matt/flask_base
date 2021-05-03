@@ -1,6 +1,3 @@
-import os
-import signal
-
 from flask import Blueprint
 from flask_restful import Api
 from redis import exceptions
